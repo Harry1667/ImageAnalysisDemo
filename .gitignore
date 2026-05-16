@@ -1,0 +1,22 @@
+# macOS
+.DS_Store
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+*.log
+.vercel
+next-env.d.ts
+
+# Env / secrets
+.env
+.env.local
+.env*.local
+
+# Editor
+.vscode/
+.idea/
+
+# Private skills directory (server IPs, SSH config, internal infra docs)
+03-Skills/
