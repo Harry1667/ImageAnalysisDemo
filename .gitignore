@@ -6,6 +6,7 @@ node_modules/
 .next/
 out/
 *.log
+*.tsbuildinfo
 .vercel
 next-env.d.ts
 
