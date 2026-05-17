@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, Copy, Check, Download, RotateCcw, FileImage } from "lucide-react";
+import { Sparkles, Copy, Check, Download, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
 import { UploadZone } from "@/components/upload-zone";
 import { ImagePreview } from "@/components/image-preview";
@@ -18,13 +18,17 @@ type Status = "idle" | "previewing" | "loading" | "success" | "error";
 const SAMPLES = [
   {
     key: "sample-1",
+    short: "範例 1 · 英文",
     label: "範例 1：英文採購單（整齊排版）",
+    description: "美國供應商英文 PO，整齊排版、5 個品項，USD",
     src: "/samples/po-sample-1.png",
     type: "image/png",
   },
   {
     key: "sample-2",
+    short: "範例 2 · 多語",
     label: "範例 2：中英日混雜 + 印章",
+    description: "日本供應商發注書，中英日混雜、紅色印章、手寫修正、微傾斜，JPY",
     src: "/samples/po-sample-2.png",
     type: "image/png",
   },
@@ -162,22 +166,41 @@ export default function Home() {
 
       <div className="flex-1 max-w-[1400px] w-full mx-auto px-6 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[calc(100vh-180px)] min-h-[600px]">
-          <section className="flex flex-col gap-4 min-h-0">
-            <div className="flex items-center justify-between">
-              <h2 className="text-sm font-medium text-[var(--color-muted)]">
+          <section className="flex flex-col gap-3 min-h-0">
+            <div className="flex items-center justify-between gap-3">
+              <h2 className="text-sm font-medium text-[var(--color-muted)] shrink-0">
                 1. 上傳採購單
               </h2>
               <div className="flex items-center gap-2">
+                <span className="text-[11px] text-[var(--color-muted)] mr-0.5 hidden sm:inline">
+                  快速範例
+                </span>
                 {SAMPLES.map((s) => (
                   <button
                     key={s.key}
                     type="button"
                     onClick={() => loadSample(s)}
                     disabled={status === "loading"}
-                    className="inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs text-[var(--color-muted)] hover:bg-[var(--color-bg)] hover:text-[var(--color-fg)] transition disabled:opacity-50"
+                    title={s.description}
+                    aria-label={s.label}
+                    className={cn(
+                      "group relative h-[88px] w-[68px] rounded-lg overflow-hidden",
+                      "border-2 border-[var(--color-border)] bg-[var(--color-surface)] shadow-sm",
+                      "hover:border-[var(--color-brand-500)] hover:shadow-md hover:-translate-y-0.5",
+                      "transition disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+                    )}
                   >
-                    <FileImage className="size-3.5" />
-                    {s.label}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={s.src}
+                      alt=""
+                      className="absolute inset-0 size-full object-cover object-top"
+                    />
+                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent px-1.5 pt-3 pb-1">
+                      <span className="block truncate text-[9.5px] font-medium text-white leading-tight">
+                        {s.short}
+                      </span>
+                    </div>
                   </button>
                 ))}
               </div>
