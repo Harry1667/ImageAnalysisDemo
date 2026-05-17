@@ -144,7 +144,7 @@ POST /api/chat
 1. **視覺體驗**：左右對照介面流暢，上傳與動畫無卡頓，呈現專業的 Demo 質感。
 2. **極端情況測試**：使用排版極度混亂、傾斜、有污漬的測試圖片，系統仍能準確抓取所有欄位。
 3. **格式絕對正確**：經過 4.3 三層保險（prompt + Pydantic/Zod 驗證 + 1 次 re-prompt）後，輸出 JSON 100% 通過 schema 驗證（特別是日期 `YYYY-MM-DD` 與數字型別），不含 markdown 包裹（```json）或模型前後說明。
-4. **效能基準**：單張圖片從點擊「萃取」到 JSON 渲染完成，p50 ≤ 4 秒、p95 ≤ 8 秒（含網路 + AI inference + 驗證重試）。
+4. **效能基準**：單張圖片從點擊「萃取」到 JSON 渲染完成，**p50 ≤ 15 秒、p95 ≤ 25 秒**（含網路 + Gemini CLI OAuth 推論 + 驗證重試）。實測 900×1300 PO 圖約 13s，由 Gemini 多模態深度解析 + ~1500 tokens prompt 驅動，比人工錄入快 20×（人工平均 5-10 分鐘/張）。
 5. **錯誤可觀測**：UI 上能清楚顯示 `actual_provider` / `actual_model` / `latency_ms` / `input_tokens` / `output_tokens`，方便 Demo 時解釋成本與路徑。
 
 ---

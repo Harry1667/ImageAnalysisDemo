@@ -8,8 +8,9 @@ const STAGES = [
   { ms: 0, text: "上傳圖片中…" },
   { ms: 600, text: "AI 正在解析單據結構…" },
   { ms: 3200, text: "辨識表格欄位與數字…" },
-  { ms: 5500, text: "驗證資料格式…" },
-  { ms: 8000, text: "正在校正細節…" },
+  { ms: 6500, text: "標準化日期 / 幣別 / 型別…" },
+  { ms: 9500, text: "Schema 驗證中…" },
+  { ms: 12000, text: "整理輸出結果…" },
 ];
 
 export function StatusLoader() {
@@ -46,7 +47,7 @@ export function StatusLoader() {
         ))}
       </div>
       <p className="text-xs text-[var(--color-muted)] max-w-xs">
-        正透過 proxy-cli 呼叫 Gemini 2.5 多模態模型，平均 2.5 秒 / 張
+        正透過 proxy-cli 呼叫 Gemini 2.5 多模態模型，全程約 10-15 秒
       </p>
     </div>
   );
