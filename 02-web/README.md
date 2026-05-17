@@ -35,7 +35,7 @@ pnpm dev
 | `PROXY_BASE_URL` | proxy-cli REST 端點 | `https://clip.twloop.com` |
 | `PROXY_TOKEN` | Bearer token（從 proxy-cli dashboard 取得） | — |
 | `PROXY_PROJECT` | 用量歸戶的 project 名稱 | `po-parser-demo` |
-| `PROXY_CHAIN` | Provider fallback chain，`provider/model` 逗號分隔 | `gemini/gemini-2.5-flash,openai/gpt-5,claude/claude-haiku-4-5` |
+| `PROXY_CHAIN` | Provider fallback chain，`provider/model` 逗號分隔 | `gemini/gemini-2.5-flash,openai/gpt-5,gemini/gemini-2.5-pro` |
 
 ⚠️ `PROXY_TOKEN` 只在 server 端使用，**絕對不能加 `NEXT_PUBLIC_` 前綴**。
 
@@ -48,7 +48,9 @@ BFF 會**依序**嘗試 `PROXY_CHAIN` 裡的每個 `provider/model`：
 3. **切換下個 provider**：兩次都失敗（或 proxy 回 `auth_invalid` / `quota_exhausted` / `provider_down` / `content_policy` / 網路錯誤），跳到 chain 的下一個 entry，重新從步驟 1 開始
 4. **全部失敗**：回 502，response 內含 `meta.attempts[]`，列出每個 provider 失敗的原因
 
-UI 上若用到 fallback（成功前先試過某個 provider），meta 列下方會顯示「Fallback chain: gemini ✗ → openai ✓」，方便 demo 時解釋穩定性。
+UI 上若用到 fallback（成功前先試過某個 provider），meta 列下方會顯示「Fallback chain: gemini-flash ✗ → openai ✓」，方便 demo 時解釋穩定性。
+
+**為什麼預設是這個 chain？**「品質遞進」策略：先用最快最便宜的 `gemini-2.5-flash`；不行就換獨立廠商 `openai/gpt-5`；最後出自家重量級 `gemini-2.5-pro`（對極端排版/手寫/印章辨識率更高）。比「試三家品牌」更有 reliability engineering 故事。
 
 ---
 

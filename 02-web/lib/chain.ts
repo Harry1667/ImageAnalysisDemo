@@ -3,7 +3,7 @@ export type ChainEntry = { provider: string; model: string };
 const DEFAULT_CHAIN: ChainEntry[] = [
   { provider: "gemini", model: "gemini-2.5-flash" },
   { provider: "openai", model: "gpt-5" },
-  { provider: "claude", model: "claude-haiku-4-5" },
+  { provider: "gemini", model: "gemini-2.5-pro" },
 ];
 
 export function parseChain(raw: string | undefined): ChainEntry[] {

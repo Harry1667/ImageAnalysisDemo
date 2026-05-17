@@ -97,7 +97,7 @@ public/
 PROXY_BASE_URL=https://clip.twloop.com
 PROXY_TOKEN=<proxy-cli 上發給此 demo 專案的 Bearer token>
 PROXY_PROJECT=po-parser-demo
-PROXY_CHAIN=gemini/gemini-2.5-flash,openai/gpt-5,claude/claude-haiku-4-5
+PROXY_CHAIN=gemini/gemini-2.5-flash,openai/gpt-5,gemini/gemini-2.5-pro
 ```
 
 > ⚠️ `PROXY_TOKEN` 絕對不能加 `NEXT_PUBLIC_` 前綴。打包時 Next.js 會把帶該前綴的 env 注入 bundle。

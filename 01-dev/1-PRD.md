@@ -46,13 +46,14 @@
 ### 4.1 核心解析引擎
 - **非單純傳統 OCR**：棄用容易受排版影響的傳統 OCR，改採呼叫多模態 LLM。
 - **AI 服務**：透過自架 `proxy-cli` 閘道呼叫，端點 `POST https://clip.twloop.com/api/chat`，header `Authorization: Bearer <token>`。
-- **Provider fallback chain（client 端控制，可設）**：
-  1. **gemini / gemini-2.5-flash**（首選）— Gemini CLI OAuth 路徑，~2.5s/5k tokens 免費。
-  2. **openai / gpt-5**（次選）— codex CLI 路徑，~6.8s/21k tokens 免費（OAuth）。
-  3. **claude / claude-haiku-4-5**（最後備援）— 注意 proxy 端 claude 讀圖實際是「Gemini API key 代打」，故為弱備援，主要用於 gemini/openai 完全掛掉的情境。
+- **Provider fallback chain（client 端控制，可設）— 品質遞進策略**：
+  1. **gemini / gemini-2.5-flash**（首選）— Gemini CLI OAuth 路徑，~2.5s/5k tokens 免費。快速且便宜，預期 80%+ 請求在此完成。
+  2. **openai / gpt-5**（次選，換廠商）— codex CLI 路徑，~6.8s/21k tokens 免費（OAuth）。獨立廠商，對 gemini 卡住的圖片提供真正不同的 second opinion。
+  3. **gemini / gemini-2.5-pro**（最終王牌）— 同家 Pro 模型，能力是 flash 的 2-3 倍，對極端排版 / 手寫字 / 印章 / 傾斜掃描的辨識率明顯較高。慢且貴 (~5×)，僅在前兩個都失敗時觸發。
   - 任一 provider 失敗（quota / auth / parse / schema 驗證）自動切換下一個。
   - 每個 provider 內部先 re-prompt 一次再放棄。
   - chain 由環境變數 `PROXY_CHAIN` 配置，預設即上述順序。
+  - **為何不放 Claude**：proxy-cli 對 claude 讀圖實際是 Gemini API key 代打（SKILL.md 第 374 行），且 `actual_provider` 會回真實值，UI 上會出現「試 claude → 實際用 gemini」的矛盾，故捨棄。
 - **圖片理解能力**：模型需能處理單據上的表格結構、印章、手寫字跡與不規則排版（PDF 也支援，同樣走 `images` 欄位、mime type 改 `application/pdf`）。
 
 ### 4.2 API 請求/回應合約

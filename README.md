@@ -33,14 +33,14 @@ npm run dev
 ## ✨ 重點特性
 
 - **多模態解析**：透過 [`proxy-cli`](https://clip.twloop.com) 閘道呼叫 Gemini 2.5 Flash 等視覺模型，~2.5s/張。
-- **Provider Fallback Chain**：`gemini → openai → claude` 依序嘗試，任一失敗自動切換，UI 上顯示 fallback 軌跡。
+- **Provider Fallback Chain**：`gemini-flash → openai/gpt-5 → gemini-pro`（品質遞進策略）依序嘗試，任一失敗自動切換，UI 上顯示 fallback 軌跡。
 - **三層 Schema 保險**：Prompt 約束 + Zod 驗證 + re-prompt 重試，確保輸出 100% 符合資料庫 schema。
 - **可觀測性**：UI 顯示 provider / model / 延遲 / token 用量 / 重試次數 / fallback chain。
 
 ## 🏗️ 架構
 
 ```
-Browser ──multipart──▶ Next.js BFF ──/api/chat──▶ proxy-cli ──▶ Gemini / OpenAI / Claude
+Browser ──multipart──▶ Next.js BFF ──/api/chat──▶ proxy-cli ──▶ Gemini Flash / OpenAI / Gemini Pro
                        (Zod validate)            (clip.twloop.com)
 ```
 
