@@ -20,4 +20,3 @@ next-env.d.ts
 .idea/
 
 # Private skills directory (server IPs, SSH config, internal infra docs)
-03-Skills/
