@@ -51,3 +51,61 @@ Bearer token 鎖在 server side，瀏覽器永遠拿不到。
 - 產品需求：[`01-dev/1-PRD.md`](./01-dev/1-PRD.md)
 - 使用者流程：[`01-dev/2-UserFlow.md`](./01-dev/2-UserFlow.md)
 - 技術選型：[`01-dev/3-TechStack.md`](./01-dev/3-TechStack.md)
+
+---
+
+## English
+
+# Zero-error PO Parser · Image Analysis Demo
+
+Demo of an automated international purchase-order intake system — a multimodal LLM turns messy PDF/image POs straight into JSON that matches the target database schema.
+
+### 📁 Repo structure
+
+```
+.
+├── 01-dev/          # Product and design docs
+│   ├── 1-PRD.md         # Product requirements
+│   ├── 2-UserFlow.md    # User flow + demo script
+│   └── 3-TechStack.md   # Stack choices
+└── 02-web/          # Next.js 15 application
+    ├── app/             # Routes + BFF (/api/extract)
+    ├── components/      # UI components
+    ├── lib/             # schema (Zod) / prompt / proxy client / chain
+    └── README.md        # Dev guide
+```
+
+### 🚀 Quick start
+
+```bash
+cd 02-web
+cp .env.example .env.local
+# Edit .env.local, fill in proxy-cli PROXY_TOKEN
+npm install
+npm run dev
+# → http://localhost:3000
+```
+
+See [`02-web/README.md`](./02-web/README.md) for details.
+
+### ✨ Highlights
+
+- **Multimodal parsing**: calls Gemini 2.5 Flash and other vision models through [`proxy-cli`](https://clip.twloop.com), ~2.5s per image.
+- **Provider fallback chain**: `gemini-flash → openai/gpt-5 → gemini-pro` — quality-ascending strategy, auto-switches on failure, fallback trail shown in the UI.
+- **Three-layer schema guard**: prompt constraints + Zod validation + re-prompt on failure → 100% schema-conformant output.
+- **Observability**: UI shows provider / model / latency / token usage / retry count / fallback chain.
+
+### 🏗️ Architecture
+
+```
+Browser ──multipart──▶ Next.js BFF ──/api/chat──▶ proxy-cli ──▶ Gemini Flash / OpenAI / Gemini Pro
+                       (Zod validate)            (clip.twloop.com)
+```
+
+The bearer token is locked to the server — the browser never sees it.
+
+### 📄 Related docs
+
+- PRD: [`01-dev/1-PRD.md`](./01-dev/1-PRD.md)
+- User flow: [`01-dev/2-UserFlow.md`](./01-dev/2-UserFlow.md)
+- Tech stack: [`01-dev/3-TechStack.md`](./01-dev/3-TechStack.md)
